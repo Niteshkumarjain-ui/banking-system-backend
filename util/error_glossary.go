@@ -34,4 +34,9 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 		ErrorMessage:   "Database Error",
 		HTTPStatusCode: http.StatusInternalServerError,
 	},
+	"ERR106": {
+		ErrorCode:      "ERR106",
+		ErrorMessage:   "Encryption Error",
+		HTTPStatusCode: http.StatusInternalServerError,
+	},
 }
