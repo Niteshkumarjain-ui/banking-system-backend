@@ -1,0 +1,5 @@
+/bin
+/vendor
+/go.sum
+.DS_Store
+.env
