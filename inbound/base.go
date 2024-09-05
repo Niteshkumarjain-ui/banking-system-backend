@@ -23,6 +23,9 @@ func HttpService() {
 	healthGroup := router.Group("/health")
 	healthGroup.GET("", healthGet)
 
+	userAuth := router.Group("/auth")
+	userAuth.POST("/register", register)
+
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)
 	if err := appRouter.Run(listenAddress); err != nil {
