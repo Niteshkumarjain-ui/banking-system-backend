@@ -13,4 +13,4 @@ database:
   dbname: banking-system-backend
   schema: public
 jwt:
-  token: abcd
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik5pdGVzaCBKYWluIiwiaWF0IjoxNTE2MjM5MDIyfQ.ac1kPdc-fLd4M4b1yHO3ixm9hk9lEx3KR00Y8EMKdMw
