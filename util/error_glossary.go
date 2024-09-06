@@ -49,4 +49,9 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 		ErrorMessage:   "Failed to generate jwt token",
 		HTTPStatusCode: http.StatusInternalServerError,
 	},
+	"ERR109": {
+		ErrorCode:      "ERR109",
+		ErrorMessage:   "Invalid Token",
+		HTTPStatusCode: http.StatusUnauthorized,
+	},
 }
