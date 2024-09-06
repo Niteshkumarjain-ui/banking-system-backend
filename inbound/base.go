@@ -26,6 +26,7 @@ func HttpService() {
 	userAuth := router.Group("/auth")
 	userAuth.POST("/register", register)
 	userAuth.POST("/login", login)
+	userAuth.GET("/session", session)
 
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)

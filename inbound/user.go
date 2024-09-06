@@ -133,3 +133,29 @@ func login(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func session(ctx *gin.Context) {
+	var err error
+	var jwt domain.JwtValidate
+	var response domain.UserSessionResponse
+	logger := util.GetLogger()
+
+	logger.Debugf("Get Session Called!")
+
+	token := ctx.GetHeader("Authorization")
+
+	jwt, err = util.ValidateJWT(token)
+
+	if err != nil {
+		ctx.JSON(util.ERROR_GLOSSARY["ERR109"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR109"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR109"].ErrorMessage,
+		})
+		return
+	}
+	response.UserId = jwt.Claims["user_id"].(float64)
+	response.Email = jwt.Claims["email"].(string)
+	response.Role = jwt.Claims["role"].(string)
+
+	ctx.JSON(http.StatusOK, response)
+}
