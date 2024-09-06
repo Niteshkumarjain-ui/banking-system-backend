@@ -11,8 +11,8 @@ type ErrorGlossary struct {
 var ERROR_GLOSSARY = map[string]ErrorGlossary{
 	"ERR101": {
 		ErrorCode:      "ERR101",
-		ErrorMessage:   "Upstream service unavailable",
-		HTTPStatusCode: http.StatusServiceUnavailable,
+		ErrorMessage:   "Either username or email must be provided",
+		HTTPStatusCode: http.StatusBadRequest,
 	},
 	"ERR102": {
 		ErrorCode:      "ERR102",
@@ -26,8 +26,8 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 	},
 	"ERR104": {
 		ErrorCode:      "ERR104",
-		ErrorMessage:   "Trailing Space Error",
-		HTTPStatusCode: http.StatusBadRequest,
+		ErrorMessage:   "Username or Email are not registerd.",
+		HTTPStatusCode: http.StatusUnauthorized,
 	},
 	"ERR105": {
 		ErrorCode:      "ERR105",
@@ -36,7 +36,17 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 	},
 	"ERR106": {
 		ErrorCode:      "ERR106",
-		ErrorMessage:   "Encryption Error",
+		ErrorMessage:   "Password Encryption Error",
+		HTTPStatusCode: http.StatusInternalServerError,
+	},
+	"ERR107": {
+		ErrorCode:      "ERR107",
+		ErrorMessage:   "Please enter correct password.",
+		HTTPStatusCode: http.StatusUnauthorized,
+	},
+	"ERR108": {
+		ErrorCode:      "ERR108",
+		ErrorMessage:   "Failed to generate jwt token",
 		HTTPStatusCode: http.StatusInternalServerError,
 	},
 }
