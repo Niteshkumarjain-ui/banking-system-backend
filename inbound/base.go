@@ -28,6 +28,10 @@ func HttpService() {
 	userAuth.POST("/login", login)
 	userAuth.GET("/session", session)
 
+	accountGroup := router.Group("/account")
+	accountGroup.POST("", util.AuthorizeRole("customer or employee"), createAccount)
+	accountGroup.GET("/:id", util.AuthorizeRole("customer or employee"), getAccount)
+
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)
 	if err := appRouter.Run(listenAddress); err != nil {
