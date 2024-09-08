@@ -62,39 +62,13 @@ func getAllAccount(ctx *gin.Context) {
 
 	logger := util.GetLogger()
 
-	logger.Debugf("Create Account Called !")
-	var request domain.AccountRequest
+	logger.Debugf("Get All Account Called !")
 	var err error
 
-	if ctx.GetHeader("Content-Type") != "application/json" {
-		logger.Warnf("%v", ctx.GetHeader("Content-Type"))
-		ctx.JSON(util.ERROR_GLOSSARY["ERR102"].HTTPStatusCode, &domain.HTTPError{
-			ErrorCode:    util.ERROR_GLOSSARY["ERR102"].ErrorCode,
-			ErrorMessage: util.ERROR_GLOSSARY["ERR102"].ErrorMessage,
-		})
-		return
-	}
-
-	if err = ctx.BindJSON(&request); err != nil {
-		logger.Warnf("Bad request %v", err)
-		ctx.JSON(util.ERROR_GLOSSARY["ERR103"].HTTPStatusCode, &domain.HTTPError{
-			ErrorCode:    util.ERROR_GLOSSARY["ERR103"].ErrorCode,
-			ErrorMessage: util.ERROR_GLOSSARY["ERR103"].ErrorMessage,
-		})
-		return
-	}
-
-	var response domain.AccountResponse
-	response, err = application.CreateAccount(request)
+	var response []domain.GetAccountResponse
+	response, err = application.GetAllAccount()
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
-		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
-			ctx.JSON(util.ERROR_GLOSSARY["ERR111"].HTTPStatusCode, &domain.HTTPError{
-				ErrorCode:    util.ERROR_GLOSSARY["ERR111"].ErrorCode,
-				ErrorMessage: util.ERROR_GLOSSARY["ERR111"].ErrorMessage,
-			})
-			return
-		}
 		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
 			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
 			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,

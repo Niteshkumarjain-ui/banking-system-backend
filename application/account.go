@@ -28,6 +28,26 @@ func CreateAccount(request domain.AccountRequest) (response domain.AccountRespon
 	return
 }
 
+func GetAllAccount() (response []domain.GetAccountResponse, err error) {
+	var accountRows []domain.Accounts
+	var responseRow domain.GetAccountResponse
+	err = outbound.DatabaseDriver.Find(&accountRows).Error
+	if err != nil {
+		return
+	}
+
+	for _, row := range accountRows {
+		responseRow = domain.GetAccountResponse{}
+		responseRow.ID = int(row.ID)
+		responseRow.UserID = row.UserID
+		responseRow.AccuntType = row.AccountType
+		responseRow.Balance = row.Balance
+		response = append(response, responseRow)
+	}
+
+	return
+}
+
 func GetAccount(accountId int, claims domain.JwtValidate) (response domain.GetAccountResponse, err error) {
 	var account domain.Accounts
 
