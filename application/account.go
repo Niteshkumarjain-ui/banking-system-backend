@@ -91,3 +91,25 @@ func UpdateAccount(request domain.UpdateAccountRequest, claims domain.JwtValidat
 	response.Status = "Account Updated Succesfully!"
 	return
 }
+
+func DeleteAccount(accountId int, claims domain.JwtValidate) (response domain.AccountResponse, err error) {
+	var account domain.Accounts
+
+	err = outbound.DatabaseDriver.Where("id = ?", accountId).First(&account).Error
+	if err != nil {
+		return
+	}
+
+	if claims.Claims["role"].(string) == "customer" && float64(account.UserID) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this account")
+		return
+	}
+	err = outbound.DatabaseDriver.Where("id = ?", accountId).Delete(&account).Error
+	if err != nil {
+		return
+	}
+
+	response.AccountId = uint(accountId)
+	response.Status = "Account is Successfully Deleted."
+	return
+}

@@ -33,7 +33,7 @@ func HttpService() {
 	accountGroup.GET("/:id", util.AuthorizeRole("customer or employee"), getAccount)
 	accountGroup.GET("", util.AuthorizeRole("employee"), getAllAccount)
 	accountGroup.PUT("/:id", util.AuthorizeRole("customer or employee"), updateAccount)
-	accountGroup.DELETE("/:id", util.AuthorizeRole("customer or employee"), getAccount)
+	accountGroup.DELETE("/:id", util.AuthorizeRole("customer or employee"), deleteAccount)
 
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)
