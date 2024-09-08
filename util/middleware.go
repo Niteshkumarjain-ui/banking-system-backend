@@ -2,7 +2,6 @@ package util
 
 import (
 	"banking-system-backend/domain"
-	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -24,8 +23,6 @@ func AuthorizeRole(requiredRole string) gin.HandlerFunc {
 		}
 
 		role := jwtClaims.Claims["role"].(string)
-		fmt.Println(role)
-		fmt.Println(requiredRole)
 		if !strings.Contains(requiredRole, role) {
 			ctx.JSON(ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
 				ErrorCode:    ERROR_GLOSSARY["ERR110"].ErrorCode,
