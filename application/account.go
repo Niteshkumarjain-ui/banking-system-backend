@@ -67,3 +67,27 @@ func GetAccount(accountId int, claims domain.JwtValidate) (response domain.GetAc
 	response.UserID = account.UserID
 	return
 }
+
+func UpdateAccount(request domain.UpdateAccountRequest, claims domain.JwtValidate) (response domain.AccountResponse, err error) {
+	var account domain.Accounts
+
+	err = outbound.DatabaseDriver.Where("id = ?", request.ID).First(&account).Error
+	if err != nil {
+		return
+	}
+
+	if claims.Claims["role"].(string) == "customer" && float64(account.UserID) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this account")
+		return
+	}
+
+	account.AccountType = request.AccountType
+	err = outbound.DatabaseDriver.Save(&account).Error
+	if err != nil {
+		return
+	}
+
+	response.AccountId = uint(request.ID)
+	response.Status = "Account Updated Succesfully!"
+	return
+}

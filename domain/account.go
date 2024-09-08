@@ -17,3 +17,8 @@ type GetAccountResponse struct {
 	Balance    float64 `json:"balance"`
 	AccuntType string  `json:"account_type"`
 }
+
+type UpdateAccountRequest struct {
+	ID          int    `json:"id"`
+	AccountType string `json:"account_type" binding:"required"`
+}

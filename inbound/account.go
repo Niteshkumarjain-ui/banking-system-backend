@@ -116,8 +116,9 @@ func updateAccount(ctx *gin.Context) {
 	logger := util.GetLogger()
 
 	logger.Debugf("Create Account Called !")
-	var request domain.AccountRequest
+	var request domain.UpdateAccountRequest
 	var err error
+	var jwtClaims domain.JwtValidate
 
 	if ctx.GetHeader("Content-Type") != "application/json" {
 		logger.Warnf("%v", ctx.GetHeader("Content-Type"))
@@ -137,14 +138,17 @@ func updateAccount(ctx *gin.Context) {
 		return
 	}
 
+	accountID, _ := strconv.Atoi(ctx.Param("id"))
+	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
+	request.ID = accountID
 	var response domain.AccountResponse
-	response, err = application.CreateAccount(request)
+	response, err = application.UpdateAccount(request, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
-		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
-			ctx.JSON(util.ERROR_GLOSSARY["ERR111"].HTTPStatusCode, &domain.HTTPError{
-				ErrorCode:    util.ERROR_GLOSSARY["ERR111"].ErrorCode,
-				ErrorMessage: util.ERROR_GLOSSARY["ERR111"].ErrorMessage,
+		if strings.Contains(err.Error(), "You are not authorized to access this account") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
 			})
 			return
 		}
