@@ -54,4 +54,14 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 		ErrorMessage:   "Invalid Token",
 		HTTPStatusCode: http.StatusUnauthorized,
 	},
+	"ERR110": {
+		ErrorCode:      "ERR110",
+		ErrorMessage:   "User is not authorized",
+		HTTPStatusCode: http.StatusForbidden,
+	},
+	"ERR111": {
+		ErrorCode:      "ERR111",
+		ErrorMessage:   "User already has account.",
+		HTTPStatusCode: http.StatusForbidden,
+	},
 }
