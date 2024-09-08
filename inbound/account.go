@@ -115,7 +115,7 @@ func updateAccount(ctx *gin.Context) {
 
 	logger := util.GetLogger()
 
-	logger.Debugf("Create Account Called !")
+	logger.Debugf("Update Account Called !")
 	var request domain.UpdateAccountRequest
 	var err error
 	var jwtClaims domain.JwtValidate
