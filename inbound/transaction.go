@@ -5,6 +5,7 @@ import (
 	"banking-system-backend/domain"
 	"banking-system-backend/util"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -176,6 +177,91 @@ func transferFunds(ctx *gin.Context) {
 			ctx.JSON(util.ERROR_GLOSSARY["ERR113"].HTTPStatusCode, &domain.HTTPError{
 				ErrorCode:    util.ERROR_GLOSSARY["ERR113"].ErrorCode,
 				ErrorMessage: util.ERROR_GLOSSARY["ERR113"].ErrorMessage,
+			})
+			return
+		}
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func getAccountStatement(ctx *gin.Context) {
+
+	logger := util.GetLogger()
+
+	logger.Debugf("Get Account Statemet Called !")
+	var err error
+	var jwtClaims domain.JwtValidate
+	accountID, _ := strconv.Atoi(ctx.Param("account_id"))
+
+	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
+
+	var response []domain.GetAccountStatement
+	response, err = application.GetAccountStatement(accountID, jwtClaims)
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		if strings.Contains(err.Error(), "You are not authorized to access this account") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		if strings.Contains(err.Error(), "Account Not Found") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR112"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR112"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR112"].ErrorMessage,
+			})
+			return
+		}
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func getTransaction(ctx *gin.Context) {
+
+	logger := util.GetLogger()
+
+	logger.Debugf("Get Transaction Called !")
+	var err error
+	var jwtClaims domain.JwtValidate
+	accountID, _ := strconv.Atoi(ctx.Param("transaction_id"))
+
+	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
+
+	var response domain.GetAccountStatement
+	response, err = application.GetTransaction(accountID, jwtClaims)
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		if strings.Contains(err.Error(), "You are not authorized to access this account") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		if strings.Contains(err.Error(), "Account Not Found") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR112"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR112"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR112"].ErrorMessage,
+			})
+			return
+		}
+		if strings.Contains(err.Error(), "Transcation Not Found") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR114"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR114"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR114"].ErrorMessage,
 			})
 			return
 		}

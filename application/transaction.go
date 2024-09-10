@@ -146,3 +146,66 @@ func TransferFunds(request domain.TransferFundsRequest, claims domain.JwtValidat
 	respones.CurrentBalance = fromAccount.Balance
 	return
 }
+
+func GetAccountStatement(accountId int, claims domain.JwtValidate) (response []domain.GetAccountStatement, err error) {
+	var transcationsRows []domain.Transactions
+	var responseRow domain.GetAccountStatement
+	var account domain.Accounts
+
+	err = outbound.DatabaseDriver.First(&account, accountId).Error
+	if err != nil {
+		err = errors.New("Account Not Found.")
+		return
+	}
+
+	if claims.Claims["role"].(string) == "customer" && float64(account.UserID) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this account")
+		return
+	}
+
+	err = outbound.DatabaseDriver.Where("account_id = ?", accountId).Find(&transcationsRows).Error
+	if err != nil {
+		return
+	}
+
+	for _, row := range transcationsRows {
+		responseRow = domain.GetAccountStatement{}
+		responseRow.ID = row.ID
+		responseRow.Amount = row.Amount
+		responseRow.TransactionType = row.TransactionType
+		responseRow.CreatedAt = row.CreatedAt
+		responseRow.AccountID = int(row.AccountID)
+		response = append(response, responseRow)
+	}
+
+	return
+}
+
+func GetTransaction(transactionId int, claims domain.JwtValidate) (response domain.GetAccountStatement, err error) {
+	var account domain.Accounts
+	var transaction domain.Transactions
+
+	err = outbound.DatabaseDriver.First(&transaction, transactionId).Error
+	if err != nil {
+		err = errors.New("Transcation Not Found.")
+		return
+	}
+
+	err = outbound.DatabaseDriver.First(&account, transaction.AccountID).Error
+	if err != nil {
+		err = errors.New("Account Not Found")
+		return
+	}
+
+	if claims.Claims["role"].(string) == "customer" && float64(account.UserID) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this account")
+		return
+	}
+
+	response.ID = transaction.ID
+	response.Amount = transaction.Amount
+	response.TransactionType = transaction.TransactionType
+	response.CreatedAt = transaction.CreatedAt
+	response.AccountID = int(transaction.AccountID)
+	return
+}

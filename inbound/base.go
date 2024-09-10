@@ -39,6 +39,8 @@ func HttpService() {
 	transactionGroup.POST("/deposit", util.AuthorizeRole("customer or employee"), depositFunds)
 	transactionGroup.POST("/withdrawl", util.AuthorizeRole("customer or employee"), withdrawlFunds)
 	transactionGroup.POST("/transfer", util.AuthorizeRole("customer or employee"), transferFunds)
+	transactionGroup.GET("/history/:account_id", util.AuthorizeRole("customer or employee"), getAccountStatement)
+	transactionGroup.GET("/:transaction_id", util.AuthorizeRole("customer or employee"), getTransaction)
 
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)
