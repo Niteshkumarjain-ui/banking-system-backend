@@ -66,12 +66,17 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 	},
 	"ERR112": {
 		ErrorCode:      "ERR112",
-		ErrorMessage:   "Account Not Found.",
+		ErrorMessage:   "Failed to retrieve account details.",
 		HTTPStatusCode: http.StatusNotFound,
 	},
 	"ERR113": {
 		ErrorCode:      "ERR113",
 		ErrorMessage:   "Insufficent Balace.",
 		HTTPStatusCode: http.StatusBadRequest,
+	},
+	"ERR114": {
+		ErrorCode:      "ERR114",
+		ErrorMessage:   "Transaction Not Found.",
+		HTTPStatusCode: http.StatusNotFound,
 	},
 }
