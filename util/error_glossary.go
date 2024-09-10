@@ -64,4 +64,14 @@ var ERROR_GLOSSARY = map[string]ErrorGlossary{
 		ErrorMessage:   "User already has account.",
 		HTTPStatusCode: http.StatusForbidden,
 	},
+	"ERR112": {
+		ErrorCode:      "ERR112",
+		ErrorMessage:   "Account Not Found.",
+		HTTPStatusCode: http.StatusNotFound,
+	},
+	"ERR113": {
+		ErrorCode:      "ERR113",
+		ErrorMessage:   "Insufficent Balace.",
+		HTTPStatusCode: http.StatusBadRequest,
+	},
 }
