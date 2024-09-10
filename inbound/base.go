@@ -35,6 +35,10 @@ func HttpService() {
 	accountGroup.PUT("/:id", util.AuthorizeRole("customer or employee"), updateAccount)
 	accountGroup.DELETE("/:id", util.AuthorizeRole("customer or employee"), deleteAccount)
 
+	transactionGroup := router.Group("/transaction")
+	transactionGroup.POST("/deposit", util.AuthorizeRole("customer or employee"), depositFunds)
+	transactionGroup.POST("/withdrawl", util.AuthorizeRole("customer or employee"), withdrawlFunds)
+
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)
 	if err := appRouter.Run(listenAddress); err != nil {
