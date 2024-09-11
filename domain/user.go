@@ -27,3 +27,21 @@ type UserSessionResponse struct {
 	Email  string  `json:"email"`
 	Role   string  `json:"role"`
 }
+
+type GetUserResponse struct {
+	ID    int    `json:"user_id"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+	Name  string `json:"name"`
+}
+
+type UpdateUserRequest struct {
+	ID    int    `json:"id"`
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
+type UserResponse struct {
+	ID     uint   `json:"id"`
+	Status string `json:"status"`
+}

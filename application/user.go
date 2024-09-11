@@ -71,3 +71,95 @@ func Login(request domain.UserLoginRequest) (response domain.UserLoginResponse, 
 
 	return
 }
+
+func GetAllUser() (response []domain.GetUserResponse, err error) {
+	var userRows []domain.Users
+	var responseRow domain.GetUserResponse
+	err = outbound.DatabaseDriver.Find(&userRows).Error
+	if err != nil {
+		return
+	}
+
+	for _, row := range userRows {
+		responseRow = domain.GetUserResponse{}
+		responseRow.ID = int(row.ID)
+		responseRow.Role = row.Role
+		responseRow.Email = row.Email
+		responseRow.Name = row.Username
+		response = append(response, responseRow)
+	}
+
+	return
+}
+
+func GetUser(userId int, claims domain.JwtValidate) (response domain.GetUserResponse, err error) {
+	var user domain.Users
+
+	err = outbound.DatabaseDriver.First(&user, userId).Error
+	if err != nil {
+		return
+	}
+
+	if claims.Claims["role"].(string) == "customer" && float64(userId) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this user")
+		return
+	}
+
+	response.ID = userId
+	response.Email = user.Email
+	response.Name = user.Username
+	response.Role = user.Role
+	return
+}
+
+func UpdateUser(request domain.UpdateUserRequest, claims domain.JwtValidate) (response domain.UserResponse, err error) {
+	var user domain.Users
+
+	if claims.Claims["role"].(string) == "customer" && float64(request.ID) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this user")
+		return
+	}
+
+	err = outbound.DatabaseDriver.Where("id = ?", request.ID).First(&user).Error
+	if err != nil {
+		return
+	}
+
+	if request.Email != "" {
+		user.Email = request.Email
+	}
+	if request.Name != "" {
+		user.Username = request.Name
+	}
+	err = outbound.DatabaseDriver.Save(&user).Error
+	if err != nil {
+		return
+	}
+
+	response.ID = uint(request.ID)
+	response.Status = "User Updated Succesfully!"
+	return
+}
+
+func DeleteUser(userId int, claims domain.JwtValidate) (response domain.UserResponse, err error) {
+	var user domain.Users
+
+	if claims.Claims["role"].(string) == "customer" && float64(userId) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this user")
+		return
+	}
+
+	err = outbound.DatabaseDriver.Where("id = ?", userId).First(&user).Error
+	if err != nil {
+		return
+	}
+
+	err = outbound.DatabaseDriver.Where("id = ?", userId).Delete(&user).Error
+	if err != nil {
+		return
+	}
+
+	response.ID = uint(userId)
+	response.Status = "User is Successfully Deleted."
+	return
+}

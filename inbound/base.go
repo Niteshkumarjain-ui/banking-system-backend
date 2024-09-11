@@ -42,6 +42,12 @@ func HttpService() {
 	transactionGroup.GET("/history/:account_id", util.AuthorizeRole("customer or employee"), getAccountStatement)
 	transactionGroup.GET("/:transaction_id", util.AuthorizeRole("customer or employee"), getTransaction)
 
+	userGroup := router.Group("/user")
+	userGroup.GET("/:id", util.AuthorizeRole("customer or employee"), getUser)
+	userGroup.GET("", util.AuthorizeRole("employee"), getAllUser)
+	userGroup.PUT("/:id", util.AuthorizeRole("customer or employee"), updateUser)
+	userGroup.DELETE("/:id", util.AuthorizeRole("employee"), deleteUser)
+
 	logger.Infof("HTTP server staring...")
 	listenAddress := fmt.Sprintf("%s:%s", util.Configuration.HTTPServer.Host, util.Configuration.HTTPServer.Port)
 	if err := appRouter.Run(listenAddress); err != nil {

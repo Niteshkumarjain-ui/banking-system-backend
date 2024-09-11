@@ -5,6 +5,7 @@ import (
 	"banking-system-backend/domain"
 	"banking-system-backend/util"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -156,6 +157,138 @@ func session(ctx *gin.Context) {
 	response.UserId = jwt.Claims["user_id"].(float64)
 	response.Email = jwt.Claims["email"].(string)
 	response.Role = jwt.Claims["role"].(string)
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func getUser(ctx *gin.Context) {
+	logger := util.GetLogger()
+
+	logger.Debugf("Get User Called !")
+	var err error
+	var jwtClaims domain.JwtValidate
+	userID, _ := strconv.Atoi(ctx.Param("id"))
+
+	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
+
+	var response domain.GetUserResponse
+	response, err = application.GetUser(userID, jwtClaims)
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		if strings.Contains(err.Error(), "You are not authorized to access this user") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func getAllUser(ctx *gin.Context) {
+	logger := util.GetLogger()
+
+	logger.Debugf("Get All User Called !")
+	var err error
+
+	var response []domain.GetUserResponse
+	response, err = application.GetAllUser()
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func updateUser(ctx *gin.Context) {
+	logger := util.GetLogger()
+
+	logger.Debugf("Update User Called !")
+	var request domain.UpdateUserRequest
+	var err error
+	var jwtClaims domain.JwtValidate
+
+	if ctx.GetHeader("Content-Type") != "application/json" {
+		logger.Warnf("%v", ctx.GetHeader("Content-Type"))
+		ctx.JSON(util.ERROR_GLOSSARY["ERR102"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR102"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR102"].ErrorMessage,
+		})
+		return
+	}
+
+	if err = ctx.BindJSON(&request); err != nil {
+		logger.Warnf("Bad request %v", err)
+		ctx.JSON(util.ERROR_GLOSSARY["ERR103"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR103"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR103"].ErrorMessage,
+		})
+		return
+	}
+
+	userID, _ := strconv.Atoi(ctx.Param("id"))
+	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
+	request.ID = userID
+	var response domain.UserResponse
+	response, err = application.UpdateUser(request, jwtClaims)
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		if strings.Contains(err.Error(), "You are not authorized to access this user") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func deleteUser(ctx *gin.Context) {
+	logger := util.GetLogger()
+
+	logger.Debugf("Delete User Called !")
+	var err error
+	var jwtClaims domain.JwtValidate
+	userID, _ := strconv.Atoi(ctx.Param("id"))
+
+	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
+
+	var response domain.UserResponse
+	response, err = application.DeleteUser(userID, jwtClaims)
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		if strings.Contains(err.Error(), "You are not authorized to access this user") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
 
 	ctx.JSON(http.StatusOK, response)
 }
