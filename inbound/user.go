@@ -292,3 +292,51 @@ func deleteUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func giveUserRole(ctx *gin.Context) {
+	logger := util.GetLogger()
+
+	logger.Debugf("Give User Role Called !")
+	var request domain.GiveUserRoleRequest
+	var err error
+
+	if ctx.GetHeader("Content-Type") != "application/json" {
+		logger.Warnf("%v", ctx.GetHeader("Content-Type"))
+		ctx.JSON(util.ERROR_GLOSSARY["ERR102"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR102"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR102"].ErrorMessage,
+		})
+		return
+	}
+
+	if err = ctx.BindJSON(&request); err != nil {
+		logger.Warnf("Bad request %v", err)
+		ctx.JSON(util.ERROR_GLOSSARY["ERR103"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR103"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR103"].ErrorMessage,
+		})
+		return
+	}
+
+	userID, _ := strconv.Atoi(ctx.Param("id"))
+	request.ID = userID
+	var response domain.UserResponse
+	response, err = application.GiveUserRole(request)
+	if err != nil {
+		logger.Warnf("Bad request %v", err)
+		if strings.Contains(err.Error(), "You are not authorized to access this user") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
+			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
+			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}

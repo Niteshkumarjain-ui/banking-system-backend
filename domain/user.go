@@ -4,7 +4,6 @@ type UserRegisterRequest struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	Role     string `json:"role" binding:"required"`
 }
 
 type UserRegisterResponse struct {
@@ -44,4 +43,9 @@ type UpdateUserRequest struct {
 type UserResponse struct {
 	ID     uint   `json:"id"`
 	Status string `json:"status"`
+}
+
+type GiveUserRoleRequest struct {
+	ID   int    `json:"id"`
+	Role string `json:"role" binding:"required"`
 }

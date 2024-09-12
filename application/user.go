@@ -21,7 +21,7 @@ func Register(request domain.UserRegisterRequest) (response domain.UserRegisterR
 		Username:  request.Username,
 		Email:     request.Email,
 		Password:  hashedPassword.EncryptPassword,
-		Role:      request.Role,
+		Role:      "customer",
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
@@ -161,5 +161,24 @@ func DeleteUser(userId int, claims domain.JwtValidate) (response domain.UserResp
 
 	response.ID = uint(userId)
 	response.Status = "User is Successfully Deleted."
+	return
+}
+
+func GiveUserRole(request domain.GiveUserRoleRequest) (response domain.UserResponse, err error) {
+	var user domain.Users
+
+	err = outbound.DatabaseDriver.Where("id = ?", request.ID).First(&user).Error
+	if err != nil {
+		return
+	}
+
+	user.Role = request.Role
+	err = outbound.DatabaseDriver.Save(&user).Error
+	if err != nil {
+		return
+	}
+
+	response.ID = uint(request.ID)
+	response.Status = "User Succesfully Role given."
 	return
 }
