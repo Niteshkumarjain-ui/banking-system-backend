@@ -101,6 +101,13 @@ func getAccount(ctx *gin.Context) {
 			})
 			return
 		}
+		if strings.Contains(err.Error(), "Account Not Found") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR112"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR112"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR112"].ErrorMessage,
+			})
+			return
+		}
 		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
 			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
 			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
@@ -152,6 +159,13 @@ func updateAccount(ctx *gin.Context) {
 			})
 			return
 		}
+		if strings.Contains(err.Error(), "Account Not Found") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR112"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR112"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR112"].ErrorMessage,
+			})
+			return
+		}
 		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
 			ErrorCode:    util.ERROR_GLOSSARY["ERR105"].ErrorCode,
 			ErrorMessage: util.ERROR_GLOSSARY["ERR105"].ErrorMessage,
@@ -181,6 +195,13 @@ func deleteAccount(ctx *gin.Context) {
 			ctx.JSON(util.ERROR_GLOSSARY["ERR110"].HTTPStatusCode, &domain.HTTPError{
 				ErrorCode:    util.ERROR_GLOSSARY["ERR110"].ErrorCode,
 				ErrorMessage: util.ERROR_GLOSSARY["ERR110"].ErrorMessage,
+			})
+			return
+		}
+		if strings.Contains(err.Error(), "Account Not Found") {
+			ctx.JSON(util.ERROR_GLOSSARY["ERR112"].HTTPStatusCode, &domain.HTTPError{
+				ErrorCode:    util.ERROR_GLOSSARY["ERR112"].ErrorCode,
+				ErrorMessage: util.ERROR_GLOSSARY["ERR112"].ErrorMessage,
 			})
 			return
 		}

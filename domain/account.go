@@ -1,9 +1,8 @@
 package domain
 
 type AccountRequest struct {
-	UserID      int     `json:"user_id" binding:"required"`
-	AccountType string  `json:"account_type" binding:"required"`
-	Balance     float64 `json:"balance" binding:"required"`
+	UserID      int    `json:"user_id" binding:"required"`
+	AccountType string `json:"account_type" binding:"required"`
 }
 
 type AccountResponse struct {

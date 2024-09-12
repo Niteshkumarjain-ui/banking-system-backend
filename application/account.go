@@ -12,7 +12,6 @@ func CreateAccount(request domain.AccountRequest) (response domain.AccountRespon
 	createAccount := domain.Accounts{
 		UserID:      request.UserID,
 		AccountType: request.AccountType,
-		Balance:     request.Balance,
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
 	}
@@ -53,6 +52,7 @@ func GetAccount(accountId int, claims domain.JwtValidate) (response domain.GetAc
 
 	err = outbound.DatabaseDriver.First(&account, accountId).Error
 	if err != nil {
+		err = errors.New("Account Not Found.")
 		return
 	}
 
@@ -73,6 +73,7 @@ func UpdateAccount(request domain.UpdateAccountRequest, claims domain.JwtValidat
 
 	err = outbound.DatabaseDriver.Where("id = ?", request.ID).First(&account).Error
 	if err != nil {
+		err = errors.New("Account Not Found.")
 		return
 	}
 
@@ -97,6 +98,7 @@ func DeleteAccount(accountId int, claims domain.JwtValidate) (response domain.Ac
 
 	err = outbound.DatabaseDriver.Where("id = ?", accountId).First(&account).Error
 	if err != nil {
+		err = errors.New("Account Not Found.")
 		return
 	}
 
