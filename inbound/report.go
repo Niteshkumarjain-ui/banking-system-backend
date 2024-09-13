@@ -54,7 +54,7 @@ func getUserFinancial(ctx *gin.Context) {
 
 	logger := util.GetLogger()
 
-	logger.Debugf("Get Account Balance Called !")
+	logger.Debugf("Get User Financial Called !")
 	var err error
 	var jwtClaims domain.JwtValidate
 	accountID, _ := strconv.Atoi(ctx.Param("id"))
