@@ -95,13 +95,13 @@ func GetAllUser() (response []domain.GetUserResponse, err error) {
 func GetUser(userId int, claims domain.JwtValidate) (response domain.GetUserResponse, err error) {
 	var user domain.Users
 
-	err = outbound.DatabaseDriver.First(&user, userId).Error
-	if err != nil {
+	if claims.Claims["role"].(string) == "customer" && float64(userId) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this user")
 		return
 	}
 
-	if claims.Claims["role"].(string) == "customer" && float64(userId) != (claims.Claims["user_id"].(float64)) {
-		err = errors.New("You are not authorized to access this user")
+	err = outbound.DatabaseDriver.First(&user, userId).Error
+	if err != nil {
 		return
 	}
 

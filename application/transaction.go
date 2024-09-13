@@ -94,14 +94,14 @@ func TransferFunds(request domain.TransferFundsRequest, claims domain.JwtValidat
 		return
 	}
 
-	err = outbound.DatabaseDriver.First(&toAccount, request.ToAccountID).Error
-	if err != nil {
-		err = errors.New("Account Not Found.")
+	if claims.Claims["role"].(string) == "customer" && float64(fromAccount.UserID) != (claims.Claims["user_id"].(float64)) {
+		err = errors.New("You are not authorized to access this account")
 		return
 	}
 
-	if claims.Claims["role"].(string) == "customer" && float64(fromAccount.UserID) != (claims.Claims["user_id"].(float64)) {
-		err = errors.New("You are not authorized to access this account")
+	err = outbound.DatabaseDriver.First(&toAccount, request.ToAccountID).Error
+	if err != nil {
+		err = errors.New("Account Not Found.")
 		return
 	}
 
