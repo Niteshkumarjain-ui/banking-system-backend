@@ -16,6 +16,8 @@ The **Banking System Backend** is a Go-based project that manages the core funct
 ```bash
 banking-system-backend/
 ├── application/          # Business logic layer
+├── database/             # tables schema
+├── docs/                 # Api docs
 ├── domain/               # Domain models/entities
 ├── inbound/              # API handlers (controllers)
 ├── outbound/             # Database and external services
