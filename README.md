@@ -54,12 +54,18 @@ go mode tidy
 - Update your jwt key in config.yaml file
 - For table schema click [here](database/)
 
-### 4. Run the application:
+### 4. Setup Jaeger
+
+```bash
+docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 9411:9411 jaegertracing/all-in-one:1.6
+```
+
+### 5. Run the application:
 
 ```bash
 go run main.go
 ```
 
-### 4. Access the server:
+### 6. Access the server:
 
 The server will run on http://localhost:8000.
