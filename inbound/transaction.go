@@ -12,7 +12,7 @@ import (
 )
 
 func depositFunds(ctx *gin.Context) {
-	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	span_ctx, span := util.InboudGetSpan(ctx, "depositFunds")
 	defer span.End()
 
 	logger := util.GetLogger()
@@ -69,7 +69,7 @@ func depositFunds(ctx *gin.Context) {
 }
 
 func withdrawlFunds(ctx *gin.Context) {
-	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	span_ctx, span := util.InboudGetSpan(ctx, "withdrawlFunds")
 	defer span.End()
 
 	logger := util.GetLogger()
@@ -133,7 +133,7 @@ func withdrawlFunds(ctx *gin.Context) {
 }
 
 func transferFunds(ctx *gin.Context) {
-	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	span_ctx, span := util.InboudGetSpan(ctx, "transferFunds")
 	defer span.End()
 
 	logger := util.GetLogger()
@@ -197,7 +197,7 @@ func transferFunds(ctx *gin.Context) {
 }
 
 func getAccountStatement(ctx *gin.Context) {
-	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	span_ctx, span := util.InboudGetSpan(ctx, "getAccountStatement")
 	defer span.End()
 
 	logger := util.GetLogger()
@@ -238,7 +238,7 @@ func getAccountStatement(ctx *gin.Context) {
 }
 
 func getTransaction(ctx *gin.Context) {
-	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	span_ctx, span := util.InboudGetSpan(ctx, "getTransaction")
 	defer span.End()
 
 	logger := util.GetLogger()
