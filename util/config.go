@@ -19,10 +19,6 @@ type HTTPServer struct {
 	Port string `mapstructure:"port"`
 }
 
-type Otel struct {
-	Address string `mapstructure:"address"`
-}
-
 type Database struct {
 	Host     string `mapstructure:"host"`
 	Port     string `mapstructure:"port"`
@@ -40,7 +36,6 @@ type Config struct {
 	Meta       Meta       `mapstructure:"meta"`
 	Log        Log        `mapstructure:"log"`
 	HTTPServer HTTPServer `mapstructure:"http"`
-	Otel       Otel       `mapstructure:"otel"`
 	Database   Database   `mapstructure:"database"`
 	Jwt        Jwt        `mapstructure:"jwt"`
 }
