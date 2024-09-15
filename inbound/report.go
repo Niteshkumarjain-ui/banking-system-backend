@@ -12,6 +12,8 @@ import (
 )
 
 func getAccountBalance(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "getAccountBalance")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -23,7 +25,7 @@ func getAccountBalance(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.GetAccountBalanceResponse
-	response, err = application.GetAccountBalance(accountID, jwtClaims)
+	response, err = application.GetAccountBalance(span_ctx, accountID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -51,6 +53,8 @@ func getAccountBalance(ctx *gin.Context) {
 }
 
 func getUserFinancial(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "getUserFinancial")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -62,7 +66,7 @@ func getUserFinancial(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.GetFinancialReportResponse
-	response, err = application.GetFinancialReport(accountID, jwtClaims)
+	response, err = application.GetFinancialReport(span_ctx, accountID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -90,13 +94,15 @@ func getUserFinancial(ctx *gin.Context) {
 }
 
 func getDailyTransaction(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "getDailyTransaction")
+	defer span.End()
 
 	logger := util.GetLogger()
 
 	logger.Debugf("Get Daily Transaction Called !")
 	var err error
 	var response []domain.GetDailyTransactionReportResponse
-	response, err = application.GetDailyTransactionReport()
+	response, err = application.GetDailyTransactionReport(span_ctx)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{

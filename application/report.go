@@ -4,11 +4,14 @@ import (
 	"banking-system-backend/domain"
 	"banking-system-backend/outbound"
 	"banking-system-backend/util"
+	"context"
 	"errors"
 	"time"
 )
 
-func GetAccountBalance(accountId int, claims domain.JwtValidate) (response domain.GetAccountBalanceResponse, err error) {
+func GetAccountBalance(ctx context.Context, accountId int, claims domain.JwtValidate) (response domain.GetAccountBalanceResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GetAccountBalance")
+	defer span.End()
 	var account domain.Accounts
 
 	err = outbound.DatabaseDriver.First(&account, accountId).Error
@@ -27,7 +30,9 @@ func GetAccountBalance(accountId int, claims domain.JwtValidate) (response domai
 	return
 }
 
-func GetFinancialReport(accountId int, claims domain.JwtValidate) (response domain.GetFinancialReportResponse, err error) {
+func GetFinancialReport(ctx context.Context, accountId int, claims domain.JwtValidate) (response domain.GetFinancialReportResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GetFinancialReport")
+	defer span.End()
 	var account domain.Accounts
 	var transactions []domain.Transactions
 	err = outbound.DatabaseDriver.First(&account, accountId).Error
@@ -60,7 +65,9 @@ func GetFinancialReport(accountId int, claims domain.JwtValidate) (response doma
 	return
 }
 
-func GetDailyTransactionReport() (response []domain.GetDailyTransactionReportResponse, err error) {
+func GetDailyTransactionReport(ctx context.Context) (response []domain.GetDailyTransactionReportResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GetDailyTransactionReport")
+	defer span.End()
 	var transcationsRows []domain.Transactions
 	var responseRow domain.GetDailyTransactionReportResponse
 
