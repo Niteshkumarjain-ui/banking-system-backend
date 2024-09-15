@@ -13,6 +13,8 @@ import (
 )
 
 func register(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "register")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -39,7 +41,7 @@ func register(ctx *gin.Context) {
 	}
 
 	var response domain.UserRegisterResponse
-	response, err = application.Register(request)
+	response, err = application.Register(span_ctx, request)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if err == bcrypt.ErrMismatchedHashAndPassword || strings.Contains(err.Error(), "bcrypt") {
@@ -60,6 +62,8 @@ func register(ctx *gin.Context) {
 }
 
 func login(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "login")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -94,7 +98,7 @@ func login(ctx *gin.Context) {
 	}
 
 	var response domain.UserLoginResponse
-	response, err = application.Login(request)
+	response, err = application.Login(span_ctx, request)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if err == bcrypt.ErrMismatchedHashAndPassword || strings.Contains(err.Error(), "bcrypt") {
@@ -136,6 +140,8 @@ func login(ctx *gin.Context) {
 }
 
 func session(ctx *gin.Context) {
+	_, span := util.InboudGetSpan(ctx, "session")
+	defer span.End()
 	var err error
 	var jwt domain.JwtValidate
 	var response domain.UserSessionResponse
@@ -162,6 +168,8 @@ func session(ctx *gin.Context) {
 }
 
 func getUser(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "getUser")
+	defer span.End()
 	logger := util.GetLogger()
 
 	logger.Debugf("Get User Called !")
@@ -172,7 +180,7 @@ func getUser(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.GetUserResponse
-	response, err = application.GetUser(userID, jwtClaims)
+	response, err = application.GetUser(span_ctx, userID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this user") {
@@ -193,13 +201,15 @@ func getUser(ctx *gin.Context) {
 }
 
 func getAllUser(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "getAllUser")
+	defer span.End()
 	logger := util.GetLogger()
 
 	logger.Debugf("Get All User Called !")
 	var err error
 
 	var response []domain.GetUserResponse
-	response, err = application.GetAllUser()
+	response, err = application.GetAllUser(span_ctx)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
@@ -213,6 +223,8 @@ func getAllUser(ctx *gin.Context) {
 }
 
 func updateUser(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "updateUser")
+	defer span.End()
 	logger := util.GetLogger()
 
 	logger.Debugf("Update User Called !")
@@ -242,7 +254,7 @@ func updateUser(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 	request.ID = userID
 	var response domain.UserResponse
-	response, err = application.UpdateUser(request, jwtClaims)
+	response, err = application.UpdateUser(span_ctx, request, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this user") {
@@ -263,6 +275,8 @@ func updateUser(ctx *gin.Context) {
 }
 
 func deleteUser(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "deleteUser")
+	defer span.End()
 	logger := util.GetLogger()
 
 	logger.Debugf("Delete User Called !")
@@ -273,7 +287,7 @@ func deleteUser(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.UserResponse
-	response, err = application.DeleteUser(userID, jwtClaims)
+	response, err = application.DeleteUser(span_ctx, userID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this user") {
@@ -294,6 +308,8 @@ func deleteUser(ctx *gin.Context) {
 }
 
 func giveUserRole(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "giveUserRole")
+	defer span.End()
 	logger := util.GetLogger()
 
 	logger.Debugf("Give User Role Called !")
@@ -321,7 +337,7 @@ func giveUserRole(ctx *gin.Context) {
 	userID, _ := strconv.Atoi(ctx.Param("id"))
 	request.ID = userID
 	var response domain.UserResponse
-	response, err = application.GiveUserRole(request)
+	response, err = application.GiveUserRole(span_ctx, request)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this user") {

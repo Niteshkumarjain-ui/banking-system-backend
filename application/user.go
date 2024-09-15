@@ -4,12 +4,14 @@ import (
 	"banking-system-backend/domain"
 	"banking-system-backend/outbound"
 	"banking-system-backend/util"
+	"context"
 	"errors"
 	"time"
 )
 
-func Register(request domain.UserRegisterRequest) (response domain.UserRegisterResponse, err error) {
-
+func Register(ctx context.Context, request domain.UserRegisterRequest) (response domain.UserRegisterResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "Register")
+	defer span.End()
 	var hashedPassword domain.HashPassword
 
 	hashedPassword, err = util.HashPassword(request.Password)
@@ -37,7 +39,9 @@ func Register(request domain.UserRegisterRequest) (response domain.UserRegisterR
 	return
 }
 
-func Login(request domain.UserLoginRequest) (response domain.UserLoginResponse, err error) {
+func Login(ctx context.Context, request domain.UserLoginRequest) (response domain.UserLoginResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "Login")
+	defer span.End()
 	var user domain.Users
 	var hashPassword domain.CheckHashPassword
 	var Jwt domain.JwtGenerate
@@ -72,7 +76,9 @@ func Login(request domain.UserLoginRequest) (response domain.UserLoginResponse, 
 	return
 }
 
-func GetAllUser() (response []domain.GetUserResponse, err error) {
+func GetAllUser(ctx context.Context) (response []domain.GetUserResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GetAllUser")
+	defer span.End()
 	var userRows []domain.Users
 	var responseRow domain.GetUserResponse
 	err = outbound.DatabaseDriver.Find(&userRows).Error
@@ -92,7 +98,9 @@ func GetAllUser() (response []domain.GetUserResponse, err error) {
 	return
 }
 
-func GetUser(userId int, claims domain.JwtValidate) (response domain.GetUserResponse, err error) {
+func GetUser(ctx context.Context, userId int, claims domain.JwtValidate) (response domain.GetUserResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GetUser")
+	defer span.End()
 	var user domain.Users
 
 	if claims.Claims["role"].(string) == "customer" && float64(userId) != (claims.Claims["user_id"].(float64)) {
@@ -112,7 +120,9 @@ func GetUser(userId int, claims domain.JwtValidate) (response domain.GetUserResp
 	return
 }
 
-func UpdateUser(request domain.UpdateUserRequest, claims domain.JwtValidate) (response domain.UserResponse, err error) {
+func UpdateUser(ctx context.Context, request domain.UpdateUserRequest, claims domain.JwtValidate) (response domain.UserResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "UpdateUser")
+	defer span.End()
 	var user domain.Users
 
 	if claims.Claims["role"].(string) == "customer" && float64(request.ID) != (claims.Claims["user_id"].(float64)) {
@@ -141,7 +151,9 @@ func UpdateUser(request domain.UpdateUserRequest, claims domain.JwtValidate) (re
 	return
 }
 
-func DeleteUser(userId int, claims domain.JwtValidate) (response domain.UserResponse, err error) {
+func DeleteUser(ctx context.Context, userId int, claims domain.JwtValidate) (response domain.UserResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "DeleteUser")
+	defer span.End()
 	var user domain.Users
 
 	if claims.Claims["role"].(string) == "customer" && float64(userId) != (claims.Claims["user_id"].(float64)) {
@@ -164,7 +176,9 @@ func DeleteUser(userId int, claims domain.JwtValidate) (response domain.UserResp
 	return
 }
 
-func GiveUserRole(request domain.GiveUserRoleRequest) (response domain.UserResponse, err error) {
+func GiveUserRole(ctx context.Context, request domain.GiveUserRoleRequest) (response domain.UserResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GiveUserRole")
+	defer span.End()
 	var user domain.Users
 
 	err = outbound.DatabaseDriver.Where("id = ?", request.ID).First(&user).Error
