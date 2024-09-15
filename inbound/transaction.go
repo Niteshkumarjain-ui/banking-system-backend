@@ -12,6 +12,8 @@ import (
 )
 
 func depositFunds(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -39,7 +41,7 @@ func depositFunds(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.TransactionResponse
-	response, err = application.DepositFunds(request, jwtClaims)
+	response, err = application.DepositFunds(span_ctx, request, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -67,6 +69,8 @@ func depositFunds(ctx *gin.Context) {
 }
 
 func withdrawlFunds(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -94,7 +98,7 @@ func withdrawlFunds(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.TransactionResponse
-	response, err = application.WithdrawlFunds(request, jwtClaims)
+	response, err = application.WithdrawlFunds(span_ctx, request, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -129,6 +133,8 @@ func withdrawlFunds(ctx *gin.Context) {
 }
 
 func transferFunds(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -156,7 +162,7 @@ func transferFunds(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.TransactionResponse
-	response, err = application.TransferFunds(request, jwtClaims)
+	response, err = application.TransferFunds(span_ctx, request, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -191,6 +197,8 @@ func transferFunds(ctx *gin.Context) {
 }
 
 func getAccountStatement(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -202,7 +210,7 @@ func getAccountStatement(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response []domain.GetAccountStatement
-	response, err = application.GetAccountStatement(accountID, jwtClaims)
+	response, err = application.GetAccountStatement(span_ctx, accountID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -230,6 +238,8 @@ func getAccountStatement(ctx *gin.Context) {
 }
 
 func getTransaction(ctx *gin.Context) {
+	span_ctx, span := util.InboudGetSpan(ctx, "healthGet")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -241,7 +251,7 @@ func getTransaction(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.GetAccountStatement
-	response, err = application.GetTransaction(accountID, jwtClaims)
+	response, err = application.GetTransaction(span_ctx, accountID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {

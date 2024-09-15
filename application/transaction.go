@@ -3,10 +3,14 @@ package application
 import (
 	"banking-system-backend/domain"
 	"banking-system-backend/outbound"
+	"banking-system-backend/util"
+	"context"
 	"errors"
 )
 
-func DepositFunds(request domain.DepositWithdrawlFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
+func DepositFunds(ctx context.Context, request domain.DepositWithdrawlFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "HealthGet")
+	defer span.End()
 	var account domain.Accounts
 
 	err = outbound.DatabaseDriver.First(&account, request.AccountID).Error
@@ -43,7 +47,9 @@ func DepositFunds(request domain.DepositWithdrawlFundsRequest, claims domain.Jwt
 	return
 }
 
-func WithdrawlFunds(request domain.DepositWithdrawlFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
+func WithdrawlFunds(ctx context.Context, request domain.DepositWithdrawlFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "HealthGet")
+	defer span.End()
 	var account domain.Accounts
 
 	err = outbound.DatabaseDriver.First(&account, request.AccountID).Error
@@ -85,7 +91,9 @@ func WithdrawlFunds(request domain.DepositWithdrawlFundsRequest, claims domain.J
 	return
 }
 
-func TransferFunds(request domain.TransferFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
+func TransferFunds(ctx context.Context, request domain.TransferFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "HealthGet")
+	defer span.End()
 	var fromAccount, toAccount domain.Accounts
 
 	err = outbound.DatabaseDriver.First(&fromAccount, request.FromAccountID).Error
@@ -147,7 +155,9 @@ func TransferFunds(request domain.TransferFundsRequest, claims domain.JwtValidat
 	return
 }
 
-func GetAccountStatement(accountId int, claims domain.JwtValidate) (response []domain.GetAccountStatement, err error) {
+func GetAccountStatement(ctx context.Context, accountId int, claims domain.JwtValidate) (response []domain.GetAccountStatement, err error) {
+	_, span := util.Tracer.Start(ctx, "HealthGet")
+	defer span.End()
 	var transcationsRows []domain.Transactions
 	var responseRow domain.GetAccountStatement
 	var account domain.Accounts
@@ -181,7 +191,9 @@ func GetAccountStatement(accountId int, claims domain.JwtValidate) (response []d
 	return
 }
 
-func GetTransaction(transactionId int, claims domain.JwtValidate) (response domain.GetAccountStatement, err error) {
+func GetTransaction(ctx context.Context, transactionId int, claims domain.JwtValidate) (response domain.GetAccountStatement, err error) {
+	_, span := util.Tracer.Start(ctx, "HealthGet")
+	defer span.End()
 	var account domain.Accounts
 	var transaction domain.Transactions
 
