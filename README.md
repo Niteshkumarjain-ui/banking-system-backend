@@ -28,7 +28,7 @@ banking-system-backend/
 
 ## Api Documentation
 
-    for api documentation please click here [API Guide](./docs/banking-system-backend.postman_collection.json)
+for api documentation please click here [API Guide](docs/banking-system-backend.postman_collection.json)
 
 ## Setup and Installation
 
@@ -49,6 +49,8 @@ go mode tidy
 
 - Create PostgresSql database
 - Update the config.yaml file with your PostgreSQL credentials
+- Update your jwt key in config.yaml file
+- For table schema click [here](database/)
 
 ### 4. Run the application:
 
