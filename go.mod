@@ -44,6 +44,7 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
+	github.com/uptrace/opentelemetry-go-extra/otelsql v0.3.1 // indirect
 	go.opentelemetry.io/otel v1.30.0 // indirect
 	go.opentelemetry.io/otel/exporters/jaeger v1.17.0 // indirect
 	go.opentelemetry.io/otel/metric v1.30.0 // indirect
@@ -68,6 +69,7 @@ require (
 	github.com/gin-contrib/gzip v1.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/spf13/viper v1.19.0
+	github.com/uptrace/opentelemetry-go-extra/otelgorm v0.3.1
 	go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin v0.55.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.30.0
 	go.uber.org/multierr v1.10.0 // indirect

@@ -58,7 +58,7 @@ func GetFinancialReport(ctx context.Context, accountId int, claims domain.JwtVal
 		} else if transaction.TransactionType == "transfer_in" {
 			response.TotalTransferIn += transaction.Amount
 		} else if transaction.TransactionType == "transfer_out" {
-			response.TotalTransferOut += response.TotalTransferOut
+			response.TotalTransferOut += transaction.Amount
 		}
 	}
 	response.AvailableBalance = account.Balance

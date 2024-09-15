@@ -9,7 +9,7 @@ import (
 )
 
 func DepositFunds(ctx context.Context, request domain.DepositWithdrawlFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
-	_, span := util.Tracer.Start(ctx, "HealthGet")
+	_, span := util.Tracer.Start(ctx, "DepositFunds")
 	defer span.End()
 	var account domain.Accounts
 
@@ -48,7 +48,7 @@ func DepositFunds(ctx context.Context, request domain.DepositWithdrawlFundsReque
 }
 
 func WithdrawlFunds(ctx context.Context, request domain.DepositWithdrawlFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
-	_, span := util.Tracer.Start(ctx, "HealthGet")
+	_, span := util.Tracer.Start(ctx, "WithdrawlFunds")
 	defer span.End()
 	var account domain.Accounts
 
@@ -92,7 +92,7 @@ func WithdrawlFunds(ctx context.Context, request domain.DepositWithdrawlFundsReq
 }
 
 func TransferFunds(ctx context.Context, request domain.TransferFundsRequest, claims domain.JwtValidate) (respones domain.TransactionResponse, err error) {
-	_, span := util.Tracer.Start(ctx, "HealthGet")
+	_, span := util.Tracer.Start(ctx, "TransferFunds")
 	defer span.End()
 	var fromAccount, toAccount domain.Accounts
 
@@ -156,7 +156,7 @@ func TransferFunds(ctx context.Context, request domain.TransferFundsRequest, cla
 }
 
 func GetAccountStatement(ctx context.Context, accountId int, claims domain.JwtValidate) (response []domain.GetAccountStatement, err error) {
-	_, span := util.Tracer.Start(ctx, "HealthGet")
+	_, span := util.Tracer.Start(ctx, "GetAccountStatement")
 	defer span.End()
 	var transcationsRows []domain.Transactions
 	var responseRow domain.GetAccountStatement
@@ -192,7 +192,7 @@ func GetAccountStatement(ctx context.Context, accountId int, claims domain.JwtVa
 }
 
 func GetTransaction(ctx context.Context, transactionId int, claims domain.JwtValidate) (response domain.GetAccountStatement, err error) {
-	_, span := util.Tracer.Start(ctx, "HealthGet")
+	_, span := util.Tracer.Start(ctx, "GetTransaction")
 	defer span.End()
 	var account domain.Accounts
 	var transaction domain.Transactions

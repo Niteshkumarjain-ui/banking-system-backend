@@ -4,6 +4,7 @@ import (
 	"banking-system-backend/util"
 	"fmt"
 
+	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -30,6 +31,10 @@ func createDatabaseClient() {
 		logger.Errorf("Database connection error %v", err)
 	} else {
 		logger.Infof("Database connection successful")
+	}
+
+	if err := db.Use(otelgorm.NewPlugin()); err != nil {
+		logger.Errorf("Database tracing setup error %v", err)
 	}
 
 	DatabaseDriver = db
