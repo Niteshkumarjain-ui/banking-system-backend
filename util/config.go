@@ -7,7 +7,13 @@ import (
 var Configuration *Config
 
 type Meta struct {
-	Version string `mapstructure:"version"`
+	Application string `mapstructure:"application"`
+	Environment string `mapstructure:"environment"`
+	Version     string `mapstructure:"version"`
+}
+
+type Otel struct {
+	Address string `mapstructure:"address"`
 }
 
 type Log struct {
@@ -38,6 +44,7 @@ type Config struct {
 	HTTPServer HTTPServer `mapstructure:"http"`
 	Database   Database   `mapstructure:"database"`
 	Jwt        Jwt        `mapstructure:"jwt"`
+	Otel       Otel       `mapstructure:"otel"`
 }
 
 func init() {

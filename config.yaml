@@ -1,4 +1,6 @@
 meta:
+  environment: dev
+  application: Banking System
   version: v1
 log:
   level: DEBUG
@@ -14,3 +16,5 @@ database:
   schema: public
 jwt:
   token:
+otel:
+  address: http://localhost:14268/api/traces
