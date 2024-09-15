@@ -3,11 +3,16 @@ package application
 import (
 	"banking-system-backend/domain"
 	"banking-system-backend/outbound"
+	"banking-system-backend/util"
+	"context"
 	"errors"
 	"time"
 )
 
-func CreateAccount(request domain.AccountRequest) (response domain.AccountResponse, err error) {
+func CreateAccount(ctx context.Context, request domain.AccountRequest) (response domain.AccountResponse, err error) {
+
+	_, span := util.Tracer.Start(ctx, "CreateAccount")
+	defer span.End()
 
 	createAccount := domain.Accounts{
 		UserID:      request.UserID,
@@ -27,7 +32,11 @@ func CreateAccount(request domain.AccountRequest) (response domain.AccountRespon
 	return
 }
 
-func GetAllAccount() (response []domain.GetAccountResponse, err error) {
+func GetAllAccount(ctx context.Context) (response []domain.GetAccountResponse, err error) {
+
+	_, span := util.Tracer.Start(ctx, "GetAllAccount")
+	defer span.End()
+
 	var accountRows []domain.Accounts
 	var responseRow domain.GetAccountResponse
 	err = outbound.DatabaseDriver.Find(&accountRows).Error
@@ -47,7 +56,10 @@ func GetAllAccount() (response []domain.GetAccountResponse, err error) {
 	return
 }
 
-func GetAccount(accountId int, claims domain.JwtValidate) (response domain.GetAccountResponse, err error) {
+func GetAccount(ctx context.Context, accountId int, claims domain.JwtValidate) (response domain.GetAccountResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "GetAccount")
+	defer span.End()
+
 	var account domain.Accounts
 
 	err = outbound.DatabaseDriver.First(&account, accountId).Error
@@ -68,7 +80,9 @@ func GetAccount(accountId int, claims domain.JwtValidate) (response domain.GetAc
 	return
 }
 
-func UpdateAccount(request domain.UpdateAccountRequest, claims domain.JwtValidate) (response domain.AccountResponse, err error) {
+func UpdateAccount(ctx context.Context, request domain.UpdateAccountRequest, claims domain.JwtValidate) (response domain.AccountResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "UpdateAccount")
+	defer span.End()
 	var account domain.Accounts
 
 	err = outbound.DatabaseDriver.Where("id = ?", request.ID).First(&account).Error
@@ -93,7 +107,9 @@ func UpdateAccount(request domain.UpdateAccountRequest, claims domain.JwtValidat
 	return
 }
 
-func DeleteAccount(accountId int, claims domain.JwtValidate) (response domain.AccountResponse, err error) {
+func DeleteAccount(ctx context.Context, accountId int, claims domain.JwtValidate) (response domain.AccountResponse, err error) {
+	_, span := util.Tracer.Start(ctx, "DeleteAccount")
+	defer span.End()
 	var account domain.Accounts
 
 	err = outbound.DatabaseDriver.Where("id = ?", accountId).First(&account).Error

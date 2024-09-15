@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
 func HttpService() {
@@ -17,7 +18,7 @@ func HttpService() {
 	appRouter := gin.Default()
 
 	appRouter.Use(gzip.Gzip(gzip.DefaultCompression))
-
+	appRouter.Use(otelgin.Middleware(util.Configuration.Meta.Application))
 	router := appRouter.Group(fmt.Sprintf("/api/%s", util.Configuration.Meta.Version))
 
 	healthGroup := router.Group("/health")

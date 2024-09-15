@@ -13,6 +13,9 @@ import (
 
 func createAccount(ctx *gin.Context) {
 
+	span_ctx, span := util.InboudGetSpan(ctx, "createAccount")
+	defer span.End()
+
 	logger := util.GetLogger()
 
 	logger.Debugf("Create Account Called !")
@@ -38,7 +41,7 @@ func createAccount(ctx *gin.Context) {
 	}
 
 	var response domain.AccountResponse
-	response, err = application.CreateAccount(request)
+	response, err = application.CreateAccount(span_ctx, request)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
@@ -60,13 +63,16 @@ func createAccount(ctx *gin.Context) {
 
 func getAllAccount(ctx *gin.Context) {
 
+	span_ctx, span := util.InboudGetSpan(ctx, "getAllAccount")
+	defer span.End()
+
 	logger := util.GetLogger()
 
 	logger.Debugf("Get All Account Called !")
 	var err error
 
 	var response []domain.GetAccountResponse
-	response, err = application.GetAllAccount()
+	response, err = application.GetAllAccount(span_ctx)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		ctx.JSON(util.ERROR_GLOSSARY["ERR105"].HTTPStatusCode, &domain.HTTPError{
@@ -81,6 +87,9 @@ func getAllAccount(ctx *gin.Context) {
 
 func getAccount(ctx *gin.Context) {
 
+	span_ctx, span := util.InboudGetSpan(ctx, "getAccount")
+	defer span.End()
+
 	logger := util.GetLogger()
 
 	logger.Debugf("Get Account Called !")
@@ -91,7 +100,7 @@ func getAccount(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.GetAccountResponse
-	response, err = application.GetAccount(accountID, jwtClaims)
+	response, err = application.GetAccount(span_ctx, accountID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -119,6 +128,9 @@ func getAccount(ctx *gin.Context) {
 }
 
 func updateAccount(ctx *gin.Context) {
+
+	span_ctx, span := util.InboudGetSpan(ctx, "updateAccount")
+	defer span.End()
 
 	logger := util.GetLogger()
 
@@ -149,7 +161,7 @@ func updateAccount(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 	request.ID = accountID
 	var response domain.AccountResponse
-	response, err = application.UpdateAccount(request, jwtClaims)
+	response, err = application.UpdateAccount(span_ctx, request, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
@@ -178,6 +190,9 @@ func updateAccount(ctx *gin.Context) {
 
 func deleteAccount(ctx *gin.Context) {
 
+	span_ctx, span := util.InboudGetSpan(ctx, "deleteAccount")
+	defer span.End()
+
 	logger := util.GetLogger()
 
 	logger.Debugf("Delete Account Called !")
@@ -188,7 +203,7 @@ func deleteAccount(ctx *gin.Context) {
 	jwtClaims, _ = util.ValidateJWT(ctx.GetHeader("Authorization"))
 
 	var response domain.AccountResponse
-	response, err = application.DeleteAccount(accountID, jwtClaims)
+	response, err = application.DeleteAccount(span_ctx, accountID, jwtClaims)
 	if err != nil {
 		logger.Warnf("Bad request %v", err)
 		if strings.Contains(err.Error(), "You are not authorized to access this account") {
