@@ -71,13 +71,13 @@ go run main.go
 #### Docker Build
 
 ```bash
-docker build -t flow-talk-server .
+docker build -t banking-system-backend .
 ```
 
 #### Docker Container Run
 
 ```bash
-docker run -p 8000:8000 flow-talk-server
+docker run -p 8000:8000 banking-system-backend
 ```
 
 ### 7. Access the server:
