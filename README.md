@@ -60,12 +60,26 @@ go mode tidy
 docker run -d --name jaeger -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 9411:9411 jaegertracing/all-in-one:1.6
 ```
 
-### 5. Run the application:
+### 5. Run the application in Local:
 
 ```bash
 go run main.go
 ```
 
-### 6. Access the server:
+### 6. Run the application using Docker
+
+#### Docker Build
+
+```bash
+docker build -t flow-talk-server .
+```
+
+#### Docker Container Run
+
+```bash
+docker run -p 8000:8000 flow-talk-server
+```
+
+### 7. Access the server:
 
 The server will run on http://localhost:8000.
